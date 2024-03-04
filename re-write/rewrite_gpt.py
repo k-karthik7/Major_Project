@@ -107,10 +107,46 @@ class VerifiyTab:
 
 
 class ConfigureTab:
-    def __init__(self, gui_root):
-        self.gui = gui_root
+    def __init__(self, tabview):
+        self.tabs=tabview
+        customtkinter.CTkLabel(master=self.tabs.tab("Configure"), text="File/Folder path: ").grid(row=0, column=0, padx=5, pady=5)
+        customtkinter.CTkLabel(master=self.tabs.tab("Configure"), text="Sender Email: ").grid(row=1, column=0, padx=5, pady=5)
+        customtkinter.CTkLabel(master=self.tabs.tab("Configure"), text="Password: ").grid(row=2, column=0, padx=5, pady=5)
+        customtkinter.CTkLabel(master=self.tabs.tab("Configure"), text="Receiver Email: ").grid(row=3, column=0, padx=5, pady=5)
+        self.cfg_label=customtkinter.CTkLabel(master=self.tabs.tab("Configure"), text="Click to save configuration-->", text_color="white")
+        self.cfg_label.grid(row=4, column=0)
+        self.file_folder_entry=customtkinter.CTkEntry(master=self.tabs.tab("Configure"), width=400)
+        self.file_folder_entry.grid(row=0, column=1, padx=5, pady=5)
+        self.sender_email_entry=customtkinter.CTkEntry(master=self.tabs.tab("Configure"), width=400)
+        self.sender_email_entry.grid(row=1, column=1, padx=5, pady=5)
+        self.pswd_entry=customtkinter.CTkEntry(master=self.tabs.tab("Configure"), show="*", width=400)
+        self.pswd_entry.grid(row=2, column=1, padx=5, pady=5)
+        self.receiver_email_entry=customtkinter.CTkEntry(master=self.tabs.tab("Configure"), width=400)
+        self.receiver_email_entry.grid(row=3, column=1, padx=5, pady=5)
 
+        self.config=Configuration(self.cfg_label)
+        def save_config():
+            config_data = {
+                "path": self.file_folder_entry.get(),
+                "sender_email": self.sender_email_entry.get(),
+                "password": self.pswd_entry.get(),
+                "receiver_email": self.receiver_email_entry.get(),
+            }
+            self.config.save_config("config.txt", config_data)
 
+        self.config_save_btn=customtkinter.CTkButton(master=self.tabs.tab("Configure"), text="Save Configuration", command=save_config)
+        self.config_save_btn.grid(row=4, column=1, padx=5, pady=5)
+
+class Configuration:
+    def __init__(self, cfg_lbl):
+        self.cfg_label=cfg_lbl
+    def save_config(self, filename, config_data):
+        with open(filename, 'w') as file:
+            file.write(f"File/Folder Path: {config_data['path']}\n")
+            file.write(f"Sender Email: {config_data['sender_email']}\n")
+            file.write(f"Password: {config_data['password']}\n")
+            file.write(f"Receiver's Email: {config_data['receiver_email']}\n")
+        self.cfg_label.configure(text="Configuration saved successfully", text_color="green")
 class GenerateHash:
     def __init__(self, path, checked_algorithms, display_label):
         self.path = path
