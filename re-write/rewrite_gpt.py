@@ -196,35 +196,58 @@ class GenerateHash:
 
     def send_email_prompt(self):
         if hasattr(self, 'hash_values') and self.hash_values:
-            send_email_window = tkinter.Toplevel()
-            send_email_window.geometry('500x300')
-            send_email_window.title("Send Email")
+            self.send_email_window = tkinter.Toplevel()
+            self.send_email_window.geometry('500x300')
+            self.send_email_window.title("Send Email")
 
             def send():
                 try:
-                    self.send_email(email_entry.get(), smtp_entry.get(), receiver_entry.get(), send_label)
+                    self.send_email(self.email_entry.get(), self.smtp_entry.get(), self.receiver_entry.get(), send_label)
                 except Exception as e:
                     self.display_label.configure(text='Error sending email', text_color='red')
 
-            email_label = tkinter.Label(send_email_window, text="Sender Email")
-            smtp_label = tkinter.Label(send_email_window, text="SMTP Password")
-            receiver_label = tkinter.Label(send_email_window, text="Receiver Email")
-            email_entry = tkinter.Entry(send_email_window, width=60)
-            smtp_entry = tkinter.Entry(send_email_window, width=60, show="*")
-            receiver_entry = tkinter.Entry(send_email_window, width=60)
-            send_label = tkinter.Label(send_email_window, text="Click to send mail -->")
-            send_button = tkinter.Button(send_email_window, text="Send", command=send)
+            email_label = tkinter.Label(self.send_email_window, text="Sender Email")
+            smtp_label = tkinter.Label(self.send_email_window, text="SMTP Password")
+            receiver_label = tkinter.Label(self.send_email_window, text="Receiver Email")
+            self.email_entry = tkinter.Entry(self.send_email_window, width=60)
+            self.smtp_entry = tkinter.Entry(self.send_email_window, width=60, show="*")
+            self.receiver_entry = tkinter.Entry(self.send_email_window, width=60)
+            send_label = tkinter.Label(self.send_email_window, text="Click to send mail-->")
+            send_button = tkinter.Button(self.send_email_window, text="Send", command=send)
+            load_config_btn=tkinter.Button(self.send_email_window, text="Load Credentials", command=self.load_config)
 
-            email_label.grid(row=1, column=0)
-            email_entry.grid(row=1, column=1)
-            smtp_label.grid(row=2, column=0)
-            smtp_entry.grid(row=2, column=1)
-            receiver_label.grid(row=3, column=0)
-            receiver_entry.grid(row=3, column=1)
-            send_label.grid(row=4, column=0)
-            send_button.grid(row=4, column=1)
+            email_label.grid(row=1, column=0, pady=5)
+            self.email_entry.grid(row=1, column=1, pady=5, columnspan=2)
+            smtp_label.grid(row=2, column=0, pady=5)
+            self.smtp_entry.grid(row=2, column=1, pady=5, columnspan=2)
+            receiver_label.grid(row=3, column=0, pady=5)
+            self.receiver_entry.grid(row=3, column=1, pady=5, columnspan=2)
+            send_label.grid(row=4, column=1, pady=5)
+            send_button.grid(row=4, column=2,padx=10, pady=5)
+            load_config_btn.grid(row=4, column=0,padx=10, pady=5)
         else:
             self.display_label.configure(text='Generate hash first', text_color='red')
+
+    def load_config(self):
+        try:
+            with open("config.txt", "r") as file:
+                lines=file.readlines()
+                values={}
+                for line in lines:
+                    key, value= line.strip().split(": ")
+                    values[key]=value
+            self.email_entry.delete(0, tkinter.END)
+            self.email_entry.insert(0, values["Sender Email"])
+
+            self.smtp_entry.delete(0, tkinter.END)
+            self.smtp_entry.insert(0, values["Password"])
+
+            self.receiver_entry.delete(0, tkinter.END)
+            self.receiver_entry.insert(0, values["Receiver's Email"])
+
+        except FileNotFoundError:
+            print("File Not Found")
+    
 
     def send_email(self, smail, pswd, rmail, slabel):
         sender_mail = smail
