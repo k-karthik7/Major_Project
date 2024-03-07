@@ -7,6 +7,8 @@ import smtplib
 from email.mime.text import MIMEText
 from email.mime.multipart import MIMEMultipart
 from email.mime.application import MIMEApplication
+import schedule
+import time
 
 class FileSelector:
     def __init__(self, tabview, tabtitle):
@@ -317,6 +319,19 @@ def main():
     checksum = ChecksumGuard(app)
     app.mainloop()
 
+def run_process():
+    main()
+
+# Define the time of the day when you want the process to run
+scheduled_time = "11:21"  # Adjust this according to your requirement
+
+# Schedule the process to run daily at the specified time
+schedule.every().day.at(scheduled_time).do(run_process)
+
+# Infinite loop to keep the program running
+while True:
+    schedule.run_pending()
+    time.sleep(60)  # Check for scheduled tasks every 60 seconds
 
 if __name__ == '__main__':
     main()

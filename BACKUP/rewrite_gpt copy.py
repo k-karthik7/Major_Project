@@ -86,8 +86,6 @@ class VerifiyTab:
         self.generate_tab_instance = generate_tab_instance
         self.verify_button = customtkinter.CTkButton(master=self.tabs.tab('Verify'), text='Verify', command=self.verify_hash)
         self.verify_button.pack(padx=5, pady=5)
-        self.verify_label=customtkinter.CTkLabel(master=self.tabs.tab("Verify"), text="")
-        self.verify_label.pack(padx=5, pady=5)
 
     def verify_hash(self):
         generated_hash_values = getattr(self.generate_tab_instance.hashgenerator, 'generated_hash_values', None)
@@ -100,10 +98,8 @@ class VerifiyTab:
                 match = all(item in verification_hash_values for item in generated_hash_values)
                 if match:
                     print("File verification successful! Hash values match.")
-                    self.verify_label.configure(text="File verification successful! Hash values match.", text_color="green")
                 else:
                     print("File verification failed! Hash values do not match.")
-                    self.verify_label.configure(text="File verification failed! Hash values do not match.", text_color="red")
             else:
                 print("Verification operation cancelled.")
         else:
