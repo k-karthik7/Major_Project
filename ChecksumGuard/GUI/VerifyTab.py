@@ -17,7 +17,7 @@ class VerifiyTab:
                 verification_hash_values = []
                 with open(verification_path, 'r') as verification_file:
                     verification_hash_values = verification_file.read().splitlines()
-                match = all(item in verification_hash_values for item in generated_hash_values)
+                match = any(item in verification_hash_values for item in generated_hash_values)
                 if match:
                     print("File verification successful! Hash values match.")
                     self.verify_label.configure(text="File verification successful! Hash values match.", text_color="green")
