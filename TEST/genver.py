@@ -1,5 +1,7 @@
 import os
 import hashlib
+from win11toast import toast #In win11toast, value of DEFAULT_APP_ID in line 13 was changed as per my requirements 
+
 def generatehash(path):
     checked_algorithms=['SHA512', 'MD5']
     if path:
@@ -38,6 +40,8 @@ def verify_hash(generated_hash_values,verification_path):
             if match:
                 print("File verification successful! Hash values match.")
             else:
+                button = [{'activationType': 'protocol', 'arguments': 'file:///C:/Users/', 'content': 'Open Folder'}]
+                toast('Integrity Alert!', 'Your files are changed, consider verifying them.', buttons=button)
                 print("File verification failed! Hash values do not match.")
 
 source_path=r"C:\Users\DELL\Desktop\arunkumar.txt"
